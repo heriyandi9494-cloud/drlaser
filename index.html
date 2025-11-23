@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jadwal DR Laser — Full Firebase App</title>
 <style>
-  :root{--bg:#0f1724;--accent:#111011;--muted:#0ff845;--radius:12px;}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#06f34900 0%,#8216e7 60%);color:#f1f10d;padding:24px;}
+  :root{--bg:#0663f8;--accent:#f006f0;--muted:#0ff845;--radius:12px;}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#0b0b0b 0%,#131313 60%);color:#f4f4f2;padding:24px;}
   .container{max-width:980px;margin:0 auto;}
-  .card{background:rgba(255,255,255,0.03);padding:12px;border-radius:14px;backdrop-filter:blur(6px);}
+  .card{background:rgba(5, 5, 5, 0.03);padding:12px;border-radius:14px;backdrop-filter:blur(6px);}
   table{width:100%;border-collapse:collapse;min-width:640px;}
   thead th{text-align:left;color:var(--muted);padding:8px;}
   td{padding:8px;}
   .small{font-size:13px;color:var(--muted);}
-  select,input{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);color:inherit;padding:8px;border-radius:8px;}
+  select,input{background:rgb(246, 2, 2);border:1px solid rgb(255, 255, 255);color:inherit;padding:8px;border-radius:8px;}
   button{background:linear-gradient(90deg,var(--accent),#0ade0a);color:#121111;border:0;padding:8px 10px;border-radius:8px;cursor:pointer;}
   button.ghost{background:transparent;border:1px solid rgba(228, 11, 11, 0.06);color:var(--muted);}
   .summary{margin-top:12px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;}
@@ -21,7 +21,7 @@
   .auth{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
   .muted{color:var(--muted);}
   .right{margin-left:auto;}
-  .danger{background:transparent;border:1px solid rgba(255,80,80,0.2);color:#bcb4ff;}
+  .danger{background:transparent;border:1px solid rgba(255,80,80,0.2);color:#eadb0b;}
   .btn-small{padding:6px 8px;font-size:13px;border-radius:8px;}
   @media (max-width:640px){ table{min-width:0} td{font-size:18px} }
 </style>
@@ -37,7 +37,7 @@
       <input id="email" placeholder="email admin"/>
       <input id="password" type="password" placeholder="password"/>
       <button id="btnSignUp" class="btn-small">𝐑𝐞𝐠𝐢𝐬𝐭𝐞𝐫</button>
-      <button id="btnSignIn" class="btn-small">𝐋𝐨𝐠𝐢𝐧</button>
+      <button id="btnSignIn" class="btn-bold">𝐋𝐨𝐠𝐢𝐧</button>
       <button id="btnGoogle" class="btn-small ghost">𝐋𝐨𝐠𝐢𝐧 𝐆𝐨𝐨𝐠𝐥𝐞</button>
       <button id="btnSignOut" class="btn-small ghost" style="display:none">𝐋𝐨𝐠𝐨𝐮𝐭</button>
       <div class="right muted">Status: <span id="statusEl">𝐝𝐢𝐬𝐜𝐨𝐧𝐧𝐞𝐜𝐭𝐞𝐝</span></div>
