@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jadwal DR Laser — Full Firebase App</title>
+<style>
+  :root{--bg:#0f1724;--accent:#111011;--muted:#0ff845;--radius:12px;}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#06f34900 0%,#8216e7 60%);color:#f1f10d;padding:24px;}
+  .container{max-width:980px;margin:0 auto;}
+  .card{background:rgba(255,255,255,0.03);padding:12px;border-radius:14px;backdrop-filter:blur(6px);}
+  table{width:100%;border-collapse:collapse;min-width:640px;}
+  thead th{text-align:left;color:var(--muted);padding:8px;}
+  td{padding:8px;}
+  .small{font-size:13px;color:var(--muted);}
+  select,input{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);color:inherit;padding:8px;border-radius:8px;}
+  button{background:linear-gradient(90deg,var(--accent),#0ade0a);color:#121111;border:0;padding:8px 10px;border-radius:8px;cursor:pointer;}
+  button.ghost{background:transparent;border:1px solid rgba(228, 11, 11, 0.06);color:var(--muted);}
+  .summary{margin-top:12px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .auth{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+  .muted{color:var(--muted);}
+  .right{margin-left:auto;}
+  .danger{background:transparent;border:1px solid rgba(255,80,80,0.2);color:#bcb4ff;}
+  .btn-small{padding:6px 8px;font-size:13px;border-radius:8px;}
+  @media (max-width:640px){ table{min-width:0} td{font-size:18px} }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>𝐉𝐚𝐝𝐰𝐚𝐥 𝐏𝐞𝐧𝐠𝐠𝐮𝐧𝐚𝐚𝐧 𝐃𝐑 𝐋𝐚𝐬𝐞𝐫</h1>
+  <p class="bold">𝐊𝐮𝐚𝐥𝐢𝐭𝐚𝐬 𝐝𝐚𝐫𝐚𝐡 𝐦𝐞𝐧𝐧𝐞𝐧𝐭𝐮𝐤𝐚𝐧 𝐤𝐮𝐚𝐥𝐢𝐭𝐚𝐬 𝐡𝐢𝐝𝐮𝐩. 𝐏𝐞𝐫𝐥𝐚𝐧𝐜𝐚𝐫 𝐚𝐥𝐢𝐫𝐚𝐧 𝐝𝐚𝐫𝐚𝐡 𝐝𝐞𝐧𝐠𝐚𝐧 𝐛𝐚𝐧𝐭𝐮𝐚𝐧 𝐓𝐞𝐤𝐧𝐨𝐥𝐨𝐠𝐢 𝐋𝐚𝐬𝐞𝐫</p>
+
+  <div class="card">
+    <!-- AUTH -->
+    <div class="auth">
+      <input id="email" placeholder="email admin"/>
+      <input id="password" type="password" placeholder="password"/>
+      <button id="btnSignUp" class="btn-small">𝐑𝐞𝐠𝐢𝐬𝐭𝐞𝐫</button>
+      <button id="btnSignIn" class="btn-small">𝐋𝐨𝐠𝐢𝐧</button>
+      <button id="btnGoogle" class="btn-small ghost">𝐋𝐨𝐠𝐢𝐧 𝐆𝐨𝐨𝐠𝐥𝐞</button>
+      <button id="btnSignOut" class="btn-small ghost" style="display:none">𝐋𝐨𝐠𝐨𝐮𝐭</button>
+      <div class="right muted">Status: <span id="statusEl">𝐝𝐢𝐬𝐜𝐨𝐧𝐧𝐞𝐜𝐭𝐞𝐝</span></div>
+    </div>
+
+    <!-- TABLE -->
+    <div style="overflow:auto">
+      <table id="scheduleTable">
+        <thead>
+          <tr>
+            <th>𝐍𝐨</th><th>𝐇𝐚𝐫𝐢</th><th>𝐓𝐚𝐧𝐠𝐠𝐚𝐥</th><th>𝐋𝐞𝐯𝐞𝐥</th><th>𝐃𝐮𝐫𝐚𝐬𝐢</th><th>𝐊𝐞𝐭𝐞𝐫𝐚𝐧𝐠𝐚𝐧</th><th>𝐏𝐞𝐫𝐬𝐞𝐧𝐭𝐚𝐬𝐞</th><th>𝐀𝐤𝐬𝐢</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="summary">
+      <div class="row">
+        <button id="addRowBtn">+ 𝐓𝐚𝐦𝐛𝐚𝐡 𝐃𝐚𝐭𝐚</button>
+        <button id="saveBtn" class="ghost">𝐒𝐢𝐦𝐩𝐚𝐧 𝐅𝐢𝐫𝐞𝐬𝐭𝐨𝐫𝐞</button>
+        <button id="saveLocalBtn" class="ghost">𝐒𝐢𝐦𝐩𝐚𝐧 𝐋𝐨𝐤𝐚𝐥</button>
+        <button id="loadLocalBtn" class="ghost">𝐌𝐮𝐚𝐭 𝐋𝐨𝐤𝐚𝐥</button>
+        <button id="resetBtn" class="ghost">𝐑𝐞𝐬𝐞𝐭 𝐔𝐈</button>
+        <button id="exportCSVBtn" class="ghost">𝐄𝐱𝐩𝐨𝐫𝐭 𝐂𝐒𝐕</button>
+        <button id="exportXLSXBtn" class="ghost">𝐄𝐱𝐩𝐨𝐫𝐭 𝐄𝐱𝐜𝐞𝐥</button>
+        <button id="printBtn" class="ghost">𝐏𝐫𝐢𝐧𝐭</button>
+        <button id="deleteDocBtn" class="danger">𝐇𝐚𝐩𝐮𝐬 𝐃𝐨𝐤. 𝐅𝐢𝐫𝐞𝐬𝐭𝐨𝐫𝐞</button>
+        <div class="right muted">𝐓𝐨𝐭𝐚𝐥 𝐝𝐮𝐫𝐚𝐬𝐢: <span id="totalDuration">0 𝐦𝐞𝐧𝐢𝐭</span> • <span id="totalPercent">0%</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<!-- SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+// ===== CONFIG: GANTI DENGAN FIREBASE PROJECT =====
+const firebaseConfig = {
+  apiKey: "AIzaSyAX46RaISmrPXVBADgLUumE053_Khh4mb8",
+  authDomain: "angket-63c98.firebaseapp.com",
+  databaseURL: "https://angket-63c98-default-rtdb.firebaseio.com",
+  projectId: "angket-63c98",
+  storageBucket: "angket-63c98.firebasestorage.app",
+  messagingSenderId: "589117964289",
+  appId: "1:589117964289:web:a3eac86c414db608c24000",
+  measurementId: "G-0LEGBS616T"
+};
+// ===================================================
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// ELEMENTS
+const STATUS_EL = document.getElementById('statusEl');
+const tbody = document.getElementById('tbody');
+const totalDurationEl = document.getElementById('totalDuration');
+const totalPercentEl = document.getElementById('totalPercent');
+const emailInput = document.getElementById('email');
+const passInput = document.getElementById('password');
+const btnSignUp = document.getElementById('btnSignUp');
+const btnSignIn = document.getElementById('btnSignIn');
+const btnGoogle = document.getElementById('btnGoogle');
+const btnSignOut = document.getElementById('btnSignOut');
+
+let currentUser = null;
+let unsubscribeRealtime = null;
+const LOCAL_KEY = 'jadwal_dr_laser_local_v1';
+let saveTimer = null;
+
+// ==== AUTH HANDLERS ====
+btnSignUp.addEventListener('click', ()=>{
+  const email = emailInput.value.trim();
+  const pass = passInput.value.trim();
+  if(!email||!pass) return alert('Isi email & password');
+  auth.createUserWithEmailAndPassword(email, pass)
+      .then(()=> alert('Akun terdaftar, silakan login.'))
+      .catch(e=> alert('Register error: '+e.message));
+});
+
+btnSignIn.addEventListener('click', ()=>{
+  const email = emailInput.value.trim();
+  const pass = passInput.value.trim();
+  if(!email||!pass) return alert('Isi email & password');
+  auth.signInWithEmailAndPassword(email, pass)
+      .catch(e=> alert('Login error: '+e.message));
+});
+
+btnGoogle.addEventListener('click', ()=>{
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(e=> alert('Google login error: '+e.message));
+});
+
+btnSignOut.addEventListener('click', ()=> auth.signOut());
+
+// ==== AUTH STATE CHANGE ====
+auth.onAuthStateChanged(u=>{
+  if(u){
+    currentUser = u;
+    STATUS_EL.textContent = 'connected (uid:'+u.uid+')';
+    btnSignOut.style.display='inline-block';
+    startRealtimeListener();
+  } else {
+    currentUser=null;
+    STATUS_EL.textContent='disconnected';
+    btnSignOut.style.display='none';
+    if(unsubscribeRealtime) unsubscribeRealtime();
+    renderFromArray(loadLocal()||initialData);
+  }
+});
+
+// ==== TABLE DATA ====
+const initialData = [
+  {Hari:'Senin',Tanggal:'',Level:'Low',Durasi:30,Keterangan:'dipakai'},
+  {Hari:'Selasa',Tanggal:'',Level:'Medium',Durasi:45,Keterangan:'dipakai'},
+  {Hari:'Rabu',Tanggal:'',Level:'Low',Durasi:0,Keterangan:'rest day'}
+];
+
+function createRow(item={}){
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td class="no small"></td>
+    <td><input class="hari" value="${item.Hari||''}" placeholder="Hari"></td>
+    <td><input type="date" class="tanggal" value="${item.Tanggal||''}"></td>
+    <td><select class="level"><option>Low</option><option>Medium</option><option>High</option></select></td>
+    <td><select class="durasi"><option value="15">15</option><option value="30">30</option><option value="45">45</option><option value="60">60</option></select></td>
+    <td><select class="keterangan"><option value="dipakai">dipakai</option><option value="rest day">rest day</option></select></td>
+    <td class="center"><div class="percent">0%</div></td>
+    <td class="center"><button class="ghost btn-delete">Hapus</button></td>
+  `;
+  const level=tr.querySelector('.level');
+  const dur=tr.querySelector('.durasi');
+  const ket=tr.querySelector('.keterangan');
+  const del=tr.querySelector('.btn-delete');
+
+  level.value=item.Level||'Low';
+  dur.value=item.Durasi!=null?item.Durasi:30;
+  ket.value=item.Keterangan||'dipakai';
+  if(ket.value==='rest day'){ dur.disabled=true; level.disabled=true; dur.value=0; }
+
+  function apply(){ if(ket.value==='rest day'){ dur.disabled=true; level.disabled=true; dur.value=0; } else { dur.disabled=false; level.disabled=false; if(Number(dur.value)===0) dur.value=30;} recalcAll(); }
+
+  tr.querySelectorAll('input,select').forEach(el=> el.addEventListener('change', ()=>{ apply(); saveDebouncedLocal(); if(currentUser) saveToFirestoreDebounced(); }));
+  del.addEventListener('click', ()=>{ tr.remove(); refreshNumbers(); recalcAll(); saveDebouncedLocal(); if(currentUser) saveToFirestoreDebounced(); });
+
+  tbody.appendChild(tr);
+  refreshNumbers(); recalcAll();
+}
+
+function refreshNumbers(){ [...tbody.querySelectorAll('tr')].forEach((r,i)=> r.querySelector('.no').textContent=i+1);}
+function recalcAll(){ const rows=[...tbody.querySelectorAll('tr')]; let total=0; rows.forEach(r=> total+=Number(r.querySelector('.durasi')?.value||0)); rows.forEach(r=>{ const dur=Number(r.querySelector('.durasi')?.value||0); const status=r.querySelector('.keterangan').value; const pctEl=r.querySelector('.percent'); let pct=total>0?dur/total*100:0; if(status==='rest day') pct=0; pctEl.textContent=pct.toFixed(1)+'%';}); totalDurationEl.textContent=total+' menit'; totalPercentEl.textContent=total>0?'100%':'0%';}
+function collectTableData(){ return [...tbody.querySelectorAll('tr')].map(r=>({Hari:r.querySelector('.hari').value||'',Tanggal:r.querySelector('.tanggal').value||'',Level:r.querySelector('.level').value,Durasi:Number(r.querySelector('.durasi').value||0),Keterangan:r.querySelector('.keterangan').value})); }
+function renderFromArray(arr){ tbody.innerHTML=''; arr.forEach(i=> createRow(i)); }
+
+// LocalStorage
+function saveLocal(){ localStorage.setItem(LOCAL_KEY,JSON.stringify({items:collectTableData(),ts:Date.now()})); STATUS_EL.textContent='saved local';}
+function saveDebouncedLocal(){ if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(saveLocal,400);}
+function loadLocal(){ try{ const raw=localStorage.getItem(LOCAL_KEY); if(!raw) return null; return JSON.parse(raw).items||null;} catch(e){return null;}}
+
+// Firestore
+function docRefForUser(){ if(!currentUser) return null; return db.collection('users').doc(currentUser.uid).collection('schedules').doc('table'); }
+function startRealtimeListener(){ const ref=docRefForUser(); if(!ref) return; if(unsubscribeRealtime) unsubscribeRealtime(); unsubscribeRealtime=ref.onSnapshot(doc=>{ if(!doc.exists){ ref.set({items:initialData,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).catch(console.error); return;} const data=doc.data(); renderFromArray(data.items||[]); STATUS_EL.textContent='synced'; },err=>{ console.error(err); STATUS_EL.textContent='realtime error';}); }
+function saveToFirestore(){ const ref=docRefForUser(); if(!ref){ alert('Belum login. Gunakan simpan lokal.'); return Promise.resolve(); } return ref.set({items:collectTableData(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=> STATUS_EL.textContent='saved to Firestore').catch(e=>{console.error(e); STATUS_EL.textContent='save error';}); }
+function saveToFirestoreDebounced(){ if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(saveToFirestore,700);}
+
+// UI Buttons
+document.getElementById('addRowBtn').addEventListener('click', ()=>{ createRow({}); saveDebouncedLocal(); if(currentUser) saveToFirestoreDebounced();});
+document.getElementById('saveBtn').addEventListener('click', saveToFirestore);
+document.getElementById('saveLocalBtn').addEventListener('click', saveLocal);
+document.getElementById('loadLocalBtn').addEventListener('click', ()=>{ const data=loadLocal(); if(data) renderFromArray(data); else alert('Tidak ada data lokal.');});
+document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset UI ke default?')){ renderFromArray(initialData); saveDebouncedLocal(); if(currentUser) saveToFirestoreDebounced(); }});
+
+// Export CSV
+document.getElementById('exportCSVBtn').addEventListener('click', ()=>{
+  const data=collectTableData();
+  const head=['No','Hari','Tanggal','Level','Durasi','Keterangan'];
+  const lines=[head.join(',')];
+  data.forEach((r,i)=> lines.push([i+1,r.Hari,r.Tanggal,r.Level,r.Durasi,r.Keterangan].map(v=>'\"'+String(v).replace(/\"/g,'\"\"')+'\"').join(',')));
+  const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='jadwal_dr_laser.csv'; a.click(); URL.revokeObjectURL(a.href);
+});
+
+// Export Excel
+document.getElementById('exportXLSXBtn').addEventListener('click', ()=>{
+  const data=collectTableData();
+  const ws_data=[['No','Hari','Tanggal','Level','Durasi','Keterangan']];
+  data.forEach((r,i)=> ws_data.push([i+1,r.Hari,r.Tanggal,r.Level,r.Durasi,r.Keterangan]));
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(ws_data);
+  XLSX.utils.book_append_sheet(wb,ws,'Jadwal');
+  XLSX.writeFile(wb,'jadwal_dr_laser.xlsx');
+});
+
+// Print
+document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+// Delete Firestore doc
+document.getElementById('deleteDocBtn').addEventListener('click', ()=>{
+  if(!currentUser) return alert('Login dulu');
+  if(confirm('Hapus dokumen Firestore ini?')){ const ref=docRefForUser(); ref.delete().then(()=>alert('Dokumen dihapus')).catch(e=>alert('Error: '+e.message)); }
+});
+
+// Initial render
+renderFromArray(loadLocal()||initialData);
+</script>
+</body>
+</html>
