@@ -1,246 +1,289 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jadwal DR Laser - Rekap Mingguan</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Penggunaan Dr Laser</title>
 <style>
-body{font-family:Arial,sans-serif;background:#b0cdeb;padding:10px;}
-h1{font-size:18px;margin-bottom:10px;}
-button{margin:2px;padding:5px 10px;background:#121212;color:white;border:none;border-radius:5px;cursor:pointer;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{border:1px solid #e80505;padding:5px;text-align:center;font-size:12px;}
-th{background:#0c25e0;color:white;}
-select,input{width:100%;font-size:12px;padding:3px;border-radius:5px;border:1px solid #ccc;}
-.ket-𝐃𝐢𝐩𝐚𝐤𝐚𝐢-15{background:#f6de05;color:#000;}
-.ket-𝐃𝐢𝐩𝐚𝐤𝐚𝐢-30{background:#FF9800;color:#fff;}
-.ket-𝐃𝐢𝐩𝐚𝐤𝐚𝐢-45{background:#8BC34A;color:#fff;}
-.ket-𝐃𝐢𝐩𝐚𝐤𝐚𝐢-60{background:#06eb11;color:#fff;}
-.ket-𝐓𝐢𝐝𝐚𝐤{background:#f40515;color:#000;}
-.bar-wrap{width:100%;height:15px;background:#eee;border-radius:7px;position:relative;}
-.bar{height:100%;width:0%;transition:width 0.5s;}
-.bar-text{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;color:rgb(233, 12, 12);font-weight:bold;text-shadow:0 1px 2px rgba(0,0,0,0.3);}
-.daily-wrap{margin-top:5px;margin-bottom:15px;}
+:root{--neon:#ff3b3b;--bg:#000}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:Inter,Segoe UI,system-ui,Arial,sans-serif}
+.wrap{max-width:980px;margin:18px auto;padding:18px}
+h1{text-align:center;color:var(--neon);text-shadow:0 0 10px var(--neon);margin:6px 0}
+.card{background:#060606;border-radius:10px;padding:14px;box-shadow:0 0 20px rgba(255,59,59,0.06);margin-bottom:14px;border:1px solid rgba(255,59,59,0.12)}
+label{display:block;font-size:13px;margin-bottom:6px}
+input,select,button{width:100%;padding:9px;border-radius:8px;background:transparent;border:1px solid rgba(255,59,59,0.22);color:#fff}
+.row{display:flex;gap:10px}
+.row > *{flex:1}
+.actions{display:flex;gap:10px}
+button.primary{background:var(--neon);border:none;cursor:pointer;font-weight:600;box-shadow:0 0 12px rgba(255,59,59,0.25)}
+button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);cursor:pointer}
+button.primary:hover{box-shadow:0 0 20px var(--neon)}
+table{width:100%;border-collapse:collapse;margin-top:10px;margin-bottom:20px}
+th,td{padding:10px;border-bottom:1px solid rgba(255,59,59,0.06);text-align:left;font-size:14px}
+th{color:var(--neon)}
+.muted{opacity:0.7;font-size:13px}
+.flex-between{display:flex;justify-content:space-between;align-items:center}
+.small{font-size:13px}
+.green{color:#00ff7f;font-weight:600}
+.blue{color:#1e90ff;font-weight:600}
+.yellow{color:#ffd700;font-weight:600}
+.red{color:#ff3b3b;font-weight:600}
+.hidden{display:none}
+.bar-title{margin-top:20px;margin-bottom:6px;font-weight:600;color:var(--neon)}
+@media (max-width:720px){.row{flex-direction:column}}
 </style>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+<div class="wrap">
+  <h1>𝐉𝐀𝐃𝐖𝐀𝐋 𝐏𝐄𝐍𝐆𝐆𝐔𝐍𝐀𝐀𝐍 𝐃𝐑.𝐋𝐀𝐒𝐄𝐑</h1>
 
-<h1>𝐉𝐀𝐃𝐖𝐀𝐋 𝐏𝐄𝐍𝐆𝐆𝐔𝐍𝐀𝐀𝐍 𝐃𝐑.𝐋𝐀𝐒𝐄𝐑 𝐇𝐄𝐑𝐈</h1>
-<button id="addRow">+ 𝐓𝐚𝐦𝐛𝐚𝐡 𝐁𝐚𝐫𝐢𝐬</button>
-<button id="exportCSV">𝐄𝐱𝐩𝐨𝐫𝐭 𝐂𝐒𝐕</button>
-<button id="exportPDF">𝐄𝐱𝐩𝐨𝐫𝐭 𝐏𝐃𝐅</button>
+  <!-- LOGIN -->
+  <div class="card" id="loginCard">
+    <div class="flex-between">
+      <div>
+        <div id="authStatus" class="small muted">Belum login</div>
+        <div id="userEmail" class="small"></div>
+      </div>
+      <div style="width:220px">
+        <input id="email" type="email" placeholder="Email" />
+        <input id="password" type="password" placeholder="Password" style="margin-top:8px" />
+        <div class="actions" style="margin-top:8px">
+          <button class="primary" id="btnLogin">Login</button>
+          <button class="ghost" id="btnSignup">Daftar</button>
+        </div>
+        <button id="btnLogout" class="ghost hidden" style="margin-top:8px">Logout</button>
+      </div>
+    </div>
+  </div>
 
-<table id="mainTable">
-  <thead>
-    <tr>
-      <th>𝐍𝐎</th>
-      <th>𝐇𝐀𝐑𝐈</th>
-      <th>𝐓𝐀𝐍𝐆𝐆𝐀𝐋</th>
-      <th>𝐊𝐄𝐓𝐄𝐑𝐀𝐍𝐆𝐀𝐍</th>
-      <th>𝐃𝐔𝐑𝐀𝐒𝐈</th>
-      <th>𝐏𝐀𝐆𝐈</th>
-      <th>𝐌𝐀𝐋𝐀𝐌</th>
-      <th>𝐁𝐀𝐑 (%)</th>
-    </tr>
-  </thead>
-  <tbody id="tableBody"></tbody>
-</table>
+  <!-- FORM INPUT & TABLES -->
+  <div id="mainContent" class="hidden">
+    <!-- FORM INPUT -->
+    <div class="card">
+      <div class="flex-between">
+        <div>
+          <label for="tanggal">𝐓𝐚𝐧𝐠𝐠𝐚𝐥</label>
+          <input id="tanggal" type="date" />
+        </div>
+        <div>
+          <label for="penggunaan">𝐏𝐞𝐧𝐠𝐠𝐮𝐧𝐚𝐚𝐧</label>
+          <select id="penggunaan">
+            <option value="Pagi">𝐏𝐚𝐠𝐢</option>
+            <option value="Malam">𝐌𝐚𝐥𝐚𝐦</option>
+          </select>
+        </div>
+      </div>
 
-<div class="daily-wrap">
-  <strong>𝐓𝐨𝐭𝐚𝐥 𝐏𝐞𝐫𝐬𝐞𝐧𝐭𝐚𝐬𝐞 𝐇𝐚𝐫𝐢𝐚𝐧:</strong> <span id="dailyPercent">0%</span>
-  <div class="bar-wrap"><div class="bar" id="dailyBar"></div></div>
+      <div class="row" style="margin-top:10px">
+        <div>
+          <label for="ket">𝐊𝐞𝐭𝐞𝐫𝐚𝐧𝐠𝐚𝐧</label>
+          <select id="ket">
+            <option>𝐃𝐢𝐩𝐚𝐤𝐚𝐢</option>
+            <option>𝐑𝐞𝐬𝐭𝐝𝐚𝐲</option>
+          </select>
+        </div>
+        <div>
+          <label for="bar">𝐁𝐚𝐫</label>
+          <select id="bar">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+          </select>
+        </div>
+        <div>
+          <label for="durasi">𝐃𝐮𝐫𝐚𝐬𝐢</label>
+          <select id="durasi">
+            <option>15 menit</option>
+            <option>30 menit</option>
+            <option>45 menit</option>
+            <option>60 menit</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;display:flex;gap:10px">
+        <button id="btnAdd" class="primary">𝐒𝐢𝐦𝐩𝐚𝐧</button>
+        <button id="btnClear" class="ghost">𝐑𝐞𝐬𝐞𝐭</button>
+      </div>
+      <div id="msg" class="small muted" style="margin-top:8px"></div>
+    </div>
+
+    <!-- CONTAINER TABEL MULTI BAR -->
+    <div id="tablesContainer"></div>
+  </div>
 </div>
 
-<div class="weekly-wrap">
-  <strong>𝐑𝐞𝐤𝐚𝐩 𝐌𝐢𝐧𝐠𝐠𝐮𝐚𝐧:</strong> <span id="weeklyPercent">0%</span>
-  <div class="bar-wrap"><div class="bar" id="weeklyBar"></div></div>
-</div>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
 <script>
-// ===== Firebase Config =====
 const firebaseConfig = {
-  apiKey: "AIzaSyCHnFBBhKUg9I0f84ai8_X7kcuQjqgSK5w",
-  authDomain: "loginaksi.firebaseapp.com",
-  databaseURL: "https://loginaksi-default-rtdb.firebaseio.com",
-  projectId: "loginaksi",
-  storageBucket: "loginaksi.firebasestorage.app",
-  messagingSenderId: "720249983474",
-  appId: "1:720249983474:web:7ac6ea27667bea13699b6b",
-  measurementId: "G-HRPFQC11P9"
+  apiKey: "AIzaSyBZSKHhNIAgWGHOjxEh6C2QtEHjS3B6-KQ",
+  authDomain: "jadwal-dr-laser.firebaseapp.com",
+  projectId: "jadwal-dr-laser",
+  storageBucket: "jadwal-dr-laser.firebasestorage.app",
+  messagingSenderId: "100398476032",
+  appId: "1:100398476032:web:801916082a1572f281e1e5",
+  measurementId: "G-EXV0TMTF3Q"
 };
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
 
-// ===== GLOBAL =====
-const hariOptions = ['𝐒𝐞𝐧𝐢𝐧','𝐒𝐞𝐥𝐚𝐬𝐚','𝐑𝐚𝐛𝐮','𝐊𝐚𝐦𝐢𝐬','𝐉𝐮𝐦𝐚𝐭','𝐒𝐚𝐛𝐭𝐮','𝐌𝐢𝐧𝐠𝐠𝐮'];
-const hariColors = {
-  '𝐒𝐞𝐧𝐢𝐧':'#FFEB3B','𝐒𝐞𝐥𝐚𝐬𝐚':'#FF9800','𝐑𝐚𝐛𝐮':'#8BC34A','𝐊𝐚𝐦𝐢𝐬':'#4CAF50',
-  '𝐉𝐮𝐦𝐚𝐭':'#2196F3','𝐒𝐚𝐛𝐭𝐮':'#9C27B0','𝐌𝐢𝐧𝐠𝐠𝐮':'#F44336'
-};
-let data = [];
+const auth = firebase.auth();
+const db = firebase.database();
 
-// ===== RENDER TABLE =====
-function renderTable(){
-  const tbody=document.getElementById('tableBody');
-  tbody.innerHTML='';
-  data.forEach((row,idx)=>{
-    const tr=document.createElement('tr');
-    let hariSelect='<select class="hari">';
-    hariOptions.forEach(h=>hariSelect+=`<option value="${h}" ${row.hari===h?'selected':''}>${h}</option>`);
-    hariSelect+='</select>';
+// UI refs
+const loginCard = document.getElementById('loginCard');
+const mainContent = document.getElementById('mainContent');
+const emailEl = document.getElementById('email');
+const passEl = document.getElementById('password');
+const btnLogin = document.getElementById('btnLogin');
+const btnSignup = document.getElementById('btnSignup');
+const btnLogout = document.getElementById('btnLogout');
+const authStatus = document.getElementById('authStatus');
+const userEmail = document.getElementById('userEmail');
+const btnAdd = document.getElementById('btnAdd');
+const btnClear = document.getElementById('btnClear');
+const msg = document.getElementById('msg');
+const tanggalEl = document.getElementById('tanggal');
+const penggunaanEl = document.getElementById('penggunaan');
+const ketEl = document.getElementById('ket');
+const barEl = document.getElementById('bar');
+const durasiEl = document.getElementById('durasi');
+const tablesContainer = document.getElementById('tablesContainer');
 
-    tr.innerHTML=`
-      <td>${idx+1}</td>
-      <td>${hariSelect}</td>
-      <td><input type="date" class="tanggal" value="${row.tanggal||''}"></td>
-      <td><select class="ket"><option value="𝐃𝐢𝐩𝐚𝐤𝐚𝐢">𝐃𝐢𝐩𝐚𝐤𝐚𝐢</option><option value="𝐓𝐢𝐝𝐚𝐤">𝐓𝐢𝐝𝐚𝐤</option></select></td>
-      <td><select class="durasi"><option>15</option><option>30</option><option>45</option><option>60</option></select></td>
-      <td><select class="pagi"><option value="𝐃𝐢𝐩𝐚𝐤𝐚𝐢">𝐃𝐢𝐩𝐚𝐤𝐚𝐢</option><option value="𝐓𝐢𝐝𝐚𝐤">𝐓𝐢𝐝𝐚𝐤</option></select></td>
-      <td><select class="malam"><option value="𝐃𝐢𝐩𝐚𝐤𝐚𝐢">𝐃𝐢𝐩𝐚𝐤𝐚𝐢</option><option value="𝐓𝐢𝐝𝐚𝐤">𝐓𝐢𝐝𝐚𝐤</option></select></td>
-      <td><div class="bar-wrap"><div class="bar"><div class="bar-text">0%</div></div></div></td>
-    `;
-    tbody.appendChild(tr);
+// Set tanggal hari ini
+function setToday(){ tanggalEl.value = new Date().toISOString().slice(0,10); }
+setToday();
 
-    // Set values
-    tr.querySelector('.ket').value=row.ket||'𝐃𝐢𝐩𝐚𝐤𝐚𝐢';
-    tr.querySelector('.durasi').value=row.durasi||'15';
-    tr.querySelector('.pagi').value=row.pagi||'𝐓𝐢𝐝𝐚𝐤';
-    tr.querySelector('.malam').value=row.malam||'𝐓𝐢𝐝𝐚𝐤';
+// LOGIN / SIGNUP / LOGOUT
+btnLogin.addEventListener('click', ()=>{
+  const e=emailEl.value.trim(), p=passEl.value;
+  if(!e || !p){ alert('Masukkan email & password'); return; }
+  auth.signInWithEmailAndPassword(e,p)
+      .catch(err=>alert(err.message));
+});
+btnSignup.addEventListener('click', ()=>{
+  const e=emailEl.value.trim(), p=passEl.value;
+  if(!e || !p){ alert('Masukkan email & password'); return; }
+  auth.createUserWithEmailAndPassword(e,p)
+      .then(()=>alert("Akun dibuat, silakan login"))
+      .catch(err=>alert(err.message));
+});
+btnLogout.addEventListener('click', ()=>auth.signOut());
 
-    updateColor(tr); updateBar(tr); updateHariColor(tr);
+// AUTH STATE
+auth.onAuthStateChanged(u=>{
+  if(u){
+    authStatus.textContent = "Login sebagai:";
+    userEmail.textContent = u.email;
+    loginCard.classList.add('hidden');
+    mainContent.classList.remove('hidden');
+  } else {
+    authStatus.textContent = "Belum login";
+    userEmail.textContent = "";
+    loginCard.classList.remove('hidden');
+    mainContent.classList.add('hidden');
+  }
+});
 
-    tr.querySelectorAll('input,select').forEach(el=>{
-      el.addEventListener('change',()=>updateRow(tr,idx));
-      el.addEventListener('input',()=>updateRow(tr,idx));
+// SIMPAN DATA
+btnAdd.addEventListener('click', async ()=>{
+  const tanggal = tanggalEl.value;
+  if(!tanggal){ alert("Pilih tanggal"); return; }
+  const data = {
+    hari: new Date(tanggal).toLocaleDateString("id-ID",{weekday:"long"}),
+    tanggal,
+    penggunaan: penggunaanEl.value,
+    ket: ketEl.value,
+    bar: barEl.value,
+    durasi: durasiEl.value,
+    ts: Date.now()
+  };
+  try{
+    const newRef = db.ref("laser").push();
+    await newRef.set(data);
+    msg.textContent="Tersimpan ✓";
+    setTimeout(()=>msg.textContent="",2000);
+  }catch(e){ alert("Gagal: "+e.message); }
+});
+
+// RESET FORM
+btnClear.addEventListener('click', ()=>{
+  setToday();
+  penggunaanEl.value="Pagi";
+  ketEl.value="Dipakai";
+  barEl.value="1";
+  durasiEl.value="15 menit";
+  msg.textContent="Form dibersihkan";
+  setTimeout(()=>msg.textContent="",1200);
+});
+
+// RENDER TABEL MULTI BAR
+function renderTables(snapshot){
+  tablesContainer.innerHTML="";
+  const bars = ["1","2","3","4"];
+  bars.forEach(bar=>{
+    const barData = [];
+    snapshot.forEach(c=>{
+      const r = c.val();
+      if(r.bar === bar) barData.push({key:c.key,val:r});
+    });
+    barData.sort((a,b)=>a.val.tanggal > b.val.tanggal ? 1:-1);
+
+    // Buat tabel hanya jika ada data
+    const card = document.createElement("div");
+    card.className="card";
+    const title = document.createElement("div");
+    title.className="bar-title";
+    title.textContent = "Bar "+bar;
+    card.appendChild(title);
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    thead.innerHTML=`<tr><th>No</th><th>Hari</th><th>Tanggal</th><th>Penggunaan</th><th>Keterangan</th><th>Durasi</th><th>Aksi</th></tr>`;
+    table.appendChild(thead);
+    const tbody = document.createElement("tbody");
+
+    if(barData.length===0){
+      tbody.innerHTML=`<tr><td colspan="7" class="muted">Belum ada data</td></tr>`;
+    } else {
+      barData.forEach((item,i)=>{
+        const r=item.val;
+        const tr = document.createElement("tr");
+        let penggunaanClass = r.penggunaan === "Pagi" ? "green" : "blue";
+        tr.innerHTML=`
+          <td>${i+1}</td>
+          <td>${r.hari}</td>
+          <td>${r.tanggal}</td>
+          <td class="${penggunaanClass}">${r.penggunaan}</td>
+          <td>${r.ket}</td>
+          <td class="yellow">${r.durasi}</td>
+          <td><button class="ghost" data-key="${item.key}">Hapus</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    table.appendChild(tbody);
+    card.appendChild(table);
+    tablesContainer.appendChild(card);
+
+    // Listener hapus
+    tbody.querySelectorAll("button").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        if(confirm("Hapus data?")){
+          await db.ref("laser/"+btn.dataset.key).remove();
+        }
+      });
     });
   });
-  updateDailyBar(); updateWeeklyBar();
 }
 
-// ===== BAR FUNCTION =====
-function updateBar(tr){
-  const dur=Number(tr.querySelector('.durasi').value);
-  const pagi=tr.querySelector('.pagi').value==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0;
-  const malam=tr.querySelector('.malam').value==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0;
-  const sessions=pagi+malam;
-  const barEl=tr.querySelector('.bar');
-  const barText=tr.querySelector('.bar-text');
-  if(sessions===0 || dur===0){barEl.style.width='0%'; barText.textContent='0%'; barEl.style.background='#ccc'; return;}
-  let persen=Math.min(100,(dur/60)*100*sessions);
-  barEl.style.width=persen+'%';
-  barText.textContent=Math.round(persen)+'%';
-  let color='';
-  if(dur==15) color='#FFEB3B';
-  else if(dur==30) color='#FF9800';
-  else if(dur==45) color='#8BC34A';
-  else if(dur==60) color='#2E7D32';
-  barEl.style.background = tr.querySelector('.ket').value==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?color:'#ccc';
-}
-
-function updateColor(tr){
-  const select=tr.querySelector('.ket');
-  select.className='ket';
-  if(select.value==='𝐓𝐢𝐝𝐚𝐤') select.classList.add('ket-𝐓𝐢𝐝𝐚𝐤');
-  else{
-    const dur=tr.querySelector('.durasi').value;
-    select.classList.add(`ket-𝐃𝐢𝐩𝐚𝐤𝐚𝐢-${dur}`);
-  }
-}
-
-function updateHariColor(tr){
-  const select=tr.querySelector('.hari');
-  select.style.background=hariColors[select.value]||'#fff';
-  select.style.color='#fff';
-}
-
-// ===== UPDATE DATA =====
-function updateRow(tr,idx){
-  data[idx]={
-    hari: tr.querySelector('.hari').value,
-    tanggal: tr.querySelector('.tanggal').value,
-    ket: tr.querySelector('.ket').value,
-    durasi: tr.querySelector('.durasi').value,
-    pagi: tr.querySelector('.pagi').value,
-    malam: tr.querySelector('.malam').value
-  };
-  database.ref('jadwalDRLaser').set(data).then(()=>console.log('Data tersimpan'));
-  updateColor(tr); updateBar(tr); updateHariColor(tr); updateDailyBar(); updateWeeklyBar();
-}
-
-// ===== DAILY BAR =====
-function updateDailyBar(){
-  let total=0;
-  data.forEach(row=>{
-    const dur=Number(row.durasi);
-    const s=(row.pagi==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0)+(row.malam==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0);
-    total+=Math.min(100,(dur/60)*100*s);
-  });
-  const avg=data.length?Math.round(total/data.length):0;
-  document.getElementById('dailyPercent').innerText=avg+'%';
-  document.getElementById('dailyBar').style.width=avg+'%';
-}
-
-// ===== WEEKLY BAR =====
-function updateWeeklyBar(){
-  let total=0;
-  data.forEach(row=>{
-    const dur=Number(row.durasi);
-    const s=(row.pagi==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0)+(row.malam==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0);
-    total+=Math.min(100,(dur/60)*100*s);
-  });
-  const avg=data.length?Math.round(total/data.length):0;
-  document.getElementById('weeklyPercent').innerText=avg+'%';
-  document.getElementById('weeklyBar').style.width=avg+'%';
-}
-
-// ===== BUTTONS =====
-document.getElementById('addRow').addEventListener('click',()=>{
-  data.push({hari:'Senin',tanggal:'',ket:'𝐃𝐢𝐩𝐚𝐤𝐚𝐢',durasi:'15',pagi:'𝐓𝐢𝐝𝐚𝐤',malam:'𝐓𝐢𝐝𝐚𝐤'});
-  database.ref('jadwalDRLaser').set(data); renderTable();
-});
-
-document.getElementById('exportCSV').addEventListener('click',()=>{
-  if(!data.length) return;
-  let csv='No,Hari,Tanggal,Keterangan,Durasi,Pagi,Malam,Persen\n';
-  data.forEach((r,i)=>{
-    const s=(r.pagi==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0)+(r.malam==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0);
-    let persen=Math.min(100,(Number(r.durasi)/60)*100*s);
-    csv+=`${i+1},"${r.hari}","${r.tanggal}","${r.ket}",${r.durasi},${r.pagi},${r.malam},${Math.round(persen)}%\n`;
-  });
-  const blob=new Blob([csv],{type:'text/csv'});
-  const link=document.createElement('a');
-  link.href=URL.createObjectURL(blob);
-  link.download='drlaser.csv';
-  link.click();
-});
-
-document.getElementById('exportPDF').addEventListener('click',()=>{
-  if(!data.length) return;
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(10);
-  doc.text("Jadwal DR Laser",14,10);
-  let y=20;
-  data.forEach((r,i)=>{
-    const s=(r.pagi==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0)+(r.malam==='𝐃𝐢𝐩𝐚𝐤𝐚𝐢'?1:0);
-    let persen=Math.min(100,(Number(r.durasi)/60)*100*s);
-    doc.text(`${i+1}. ${r.hari} | ${r.tanggal} | ${r.ket} | ${r.durasi} | ${r.pagi} | ${r.malam} | ${Math.round(persen)}%`,14,y);
-    y+=6;
-    if(y>280){doc.addPage();y=20;}
-  });
-  doc.save('drlaser.pdf');
-});
-
-// ===== LOAD DATA =====
-database.ref('jadwalDRLaser').once('value').then(snapshot=>{
-  if(snapshot.exists()) data=snapshot.val();
-  renderTable();
-});
+// LISTENER REALTIME
+db.ref("laser").on("value", snap=>{ renderTables(snap); });
 </script>
 </body>
 </html>
