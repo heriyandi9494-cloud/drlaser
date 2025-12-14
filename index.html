@@ -1,37 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Form Tabel Bootstrap Firebase</title>
+<meta charset="UTF-8">
+<title>Form Tabel Bootstrap Firebase</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+body { background: #f4f6f9; }
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome (ikon) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: #f4f6f9;
-        }
-
-        .circle {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .green { background: #28a745; }
-        .yellow { background: #ffc107; color:#000; }
-        .blue { background: #0d6efd; }
-        .red { background: #dc3545; }
-        .bar-container {
+.bar-container {
     width: 100%;
     background: #e9ecef;
     height: 25px;
@@ -46,376 +23,162 @@
     font-size: 12px;
     line-height: 25px;
     font-weight: bold;
-    width: 0%; /* mulai dari 0% */
-    transition: width 1s ease; /* animasi smooth */
+    width: 0%;
+    transition: width 1s ease;
 }
 
-    </style>
+.green { background: #28a745; }
+.yellow { background: #ffc107; color:#000; }
+.blue { background: #0d6efd; }
+.red { background: #dc3545; }
+</style>
 </head>
 <body>
 
 <div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Form Input Data</h5>
-        </div>
-        <div class="card-body">
-            <form id="dataForm" class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Tanggal</label>
-                    <input type="date" id="tanggal" class="form-control" required>
-                </div>
 
-                <div class="col-md-4">
-                    <label class="form-label">Dipakai</label>
-                    <select id="dipakai" class="form-select" required>
-                        <option value="">Pilih</option>
-                        <option value="Pagi">Pagi</option>
-                        <option value="Malam">Malam</option>
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">Durasi</label>
-                    <select id="durasi" class="form-select" required>
-                        <option value="">Pilih</option>
-                        <option value="15">15 Menit</option>
-                        <option value="30">30 Menit</option>
-                        <option value="45">45 Menit</option>
-                        <option value="60">60 Menit</option>
-                    </select>
-                </div>
-
-                <div class="col-12 text-end">
-                    <button class="btn btn-success">
-                        <i class="fa fa-save"></i> Simpan
-                    </button>
-                </div>
-            </form>
-        </div>
+  <!-- FORM INPUT -->
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Form Input Data</h5>
     </div>
-
-    <!-- TABEL -->
-    <div class="card shadow mt-4">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">Data Tersimpan</h5>
+    <div class="card-body">
+      <form id="dataForm" class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Tanggal</label>
+          <input type="date" id="tanggal" class="form-control" required>
         </div>
-        <div class="card-body table-responsive">
-            <table class="table table-bordered align-middle text-center">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>No</th>
-                        <th>Tanggal</th>
-                        <th>Dipakai</th>
-                        <th>Durasi</th>
-                        <th>Bar</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTable"></tbody>
-            </table>
+        <div class="col-md-4">
+          <label class="form-label">Dipakai</label>
+          <select id="dipakai" class="form-select" required>
+            <option value="">Pilih</option>
+            <option value="Pagi">Pagi</option>
+            <option value="Malam">Malam</option>
+          </select>
         </div>
+        <div class="col-md-4">
+          <label class="form-label">Durasi</label>
+          <select id="durasi" class="form-select" required>
+            <option value="">Pilih</option>
+            <option value="15">15 Menit</option>
+            <option value="30">30 Menit</option>
+            <option value="45">45 Menit</option>
+            <option value="60">60 Menit</option>
+          </select>
+        </div>
+        <div class="col-12 text-end">
+          <button class="btn btn-success"><i class="fa fa-save"></i> Simpan</button>
+        </div>
+      </form>
     </div>
+  </div>
+
+  <!-- TABEL DATA -->
+  <div class="card shadow mt-4">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Data Tersimpan</h5>
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered align-middle text-center">
+        <thead class="table-secondary">
+          <tr>
+            <th>No</th>
+            <th>Tanggal</th>
+            <th>Dipakai</th>
+            <th>Durasi</th>
+            <th>Bar</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="dataTable"></tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
+
+<!-- FIREBASE SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCJxsqRAs_MGnokDAc9kggtEE9llkjNUnQ",
-  authDomain: "drlaser-f8fe7.firebaseapp.com",
-  projectId: "drlaser-f8fe7",
-  storageBucket: "drlaser-f8fe7.appspot.com",
-  messagingSenderId: "249964844778",
-  appId: "1:249964844778:web:7d4d75ccefcacdeab4a993"
-};
+  // Hanya inisialisasi sekali
+  if (!window.firebaseApp) {
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJxsqRAs_MGnokDAc9kggtEE9llkjNUnQ",
+      authDomain: "drlaser-f8fe7.firebaseapp.com",
+      projectId: "drlaser-f8fe7",
+      storageBucket: "drlaser-f8fe7.appspot.com",
+      messagingSenderId: "249964844778",
+      appId: "1:249964844778:web:7d4d75ccefcacdeab4a993"
+    };
+    window.firebaseApp = firebase.initializeApp(firebaseConfig);
+  }
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+  const db = firebase.firestore();
 
-// ELEMENT
-const form = document.getElementById("dataForm");
-const table = document.getElementById("dataTable");
-const tanggal = document.getElementById("tanggal");
-const dipakai = document.getElementById("dipakai");
-const durasi = document.getElementById("durasi");
+  const form = document.getElementById("dataForm");
+  const table = document.getElementById("dataTable");
+  const tanggal = document.getElementById("tanggal");
+  const dipakai = document.getElementById("dipakai");
+  const durasi = document.getElementById("durasi");
 
-// WARNA
-function warnaDurasi(d) {
+  function warnaDurasi(d) {
     if (d == 15) return "green";
     if (d == 30) return "yellow";
     if (d == 45) return "blue";
     if (d == 60) return "red";
-}
+    return "gray";
+  }
 
-// SIMPAN
-form.addEventListener("submit", async (e) => {
+  // SIMPAN DATA
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     await db.collection("data").add({
-        tanggal: tanggal.value,
-        dipakai: dipakai.value,
-        durasi: Number(durasi.value)
+      tanggal: tanggal.value,
+      dipakai: dipakai.value,
+      durasi: Number(durasi.value)
     });
-
     form.reset();
-});
+  });
 
-// TAMPILKAN (TANPA orderBy)
-db.collection("data").onSnapshot(snapshot => {
+  // LISTENER REALTIME
+  db.collection("data").onSnapshot(snapshot => {
     table.innerHTML = "";
     let no = 1;
-
     snapshot.forEach(doc => {
-        const d = doc.data();
-
-        // buat row
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${no++}</td>
-            <td>${d.tanggal}</td>
-            <td>${d.dipakai}</td>
-            <td>${d.durasi} Menit</td>
-            <td>
-                <div class="bar-container">
-                    <div class="bar" style="background-color: ${warnaDurasi(d.durasi)}">
-                        ${d.durasi} Menit
-                    </div>
-                </div>
-            </td>
-            <td>
-                <button class="btn btn-danger btn-sm" onclick="hapus('${doc.id}')">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        `;
-        table.appendChild(tr);
-
-        // Animasi bar
-        const bar = tr.querySelector(".bar");
-        setTimeout(() => {
-            bar.style.width = `${d.durasi * 100 / 60}%`;
-        }, 50); // delay sedikit supaya CSS transition jalan
+      const d = doc.data();
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${no++}</td>
+        <td>${d.tanggal}</td>
+        <td>${d.dipakai}</td>
+        <td>${d.durasi} Menit</td>
+        <td>
+          <div class="bar-container">
+            <div class="bar" style="background-color:${warnaDurasi(d.durasi)}">
+              ${d.durasi} Menit
+            </div>
+          </div>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-sm" onclick="hapus('${doc.id}')">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      `;
+      table.appendChild(tr);
+      const bar = tr.querySelector(".bar");
+      setTimeout(() => { bar.style.width = `${d.durasi*100/60}%`; }, 50);
     });
-});
+  });
 
-
-// HAPUS
-function hapus(id) {
+  // HAPUS DATA
+  function hapus(id) {
     if (confirm("Hapus data ini?")) {
-        db.collection("data").doc(id).delete();
+      db.collection("data").doc(id).delete();
     }
-}
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Form Tabel Bootstrap Firebase</title>
-
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome (ikon) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: #f4f6f9;
-        }
-
-        .circle {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .green { background: #28a745; }
-        .yellow { background: #ffc107; color:#000; }
-        .blue { background: #0d6efd; }
-        .red { background: #dc3545; }
-        .bar-container {
-    width: 100%;
-    background: #e9ecef;
-    height: 25px;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.bar {
-    height: 100%;
-    text-align: center;
-    color: #fff;
-    font-size: 12px;
-    line-height: 25px;
-    font-weight: bold;
-    width: 0%; /* mulai dari 0% */
-    transition: width 1s ease; /* animasi smooth */
-}
-
-    </style>
-</head>
-<body>
-
-<div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Form Input Data</h5>
-        </div>
-        <div class="card-body">
-            <form id="dataForm" class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Tanggal</label>
-                    <input type="date" id="tanggal" class="form-control" required>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">Dipakai</label>
-                    <select id="dipakai" class="form-select" required>
-                        <option value="">Pilih</option>
-                        <option value="Pagi">Pagi</option>
-                        <option value="Malam">Malam</option>
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">Durasi</label>
-                    <select id="durasi" class="form-select" required>
-                        <option value="">Pilih</option>
-                        <option value="15">15 Menit</option>
-                        <option value="30">30 Menit</option>
-                        <option value="45">45 Menit</option>
-                        <option value="60">60 Menit</option>
-                    </select>
-                </div>
-
-                <div class="col-12 text-end">
-                    <button class="btn btn-success">
-                        <i class="fa fa-save"></i> Simpan
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- TABEL -->
-    <div class="card shadow mt-4">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">Data Tersimpan</h5>
-        </div>
-        <div class="card-body table-responsive">
-            <table class="table table-bordered align-middle text-center">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>No</th>
-                        <th>Tanggal</th>
-                        <th>Dipakai</th>
-                        <th>Durasi</th>
-                        <th>Bar</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTable"></tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCJxsqRAs_MGnokDAc9kggtEE9llkjNUnQ",
-  authDomain: "drlaser-f8fe7.firebaseapp.com",
-  projectId: "drlaser-f8fe7",
-  storageBucket: "drlaser-f8fe7.appspot.com",
-  messagingSenderId: "249964844778",
-  appId: "1:249964844778:web:7d4d75ccefcacdeab4a993"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-// ELEMENT
-const form = document.getElementById("dataForm");
-const table = document.getElementById("dataTable");
-const tanggal = document.getElementById("tanggal");
-const dipakai = document.getElementById("dipakai");
-const durasi = document.getElementById("durasi");
-
-// WARNA
-function warnaDurasi(d) {
-    if (d == 15) return "green";
-    if (d == 30) return "yellow";
-    if (d == 45) return "blue";
-    if (d == 60) return "red";
-}
-
-// SIMPAN
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    await db.collection("data").add({
-        tanggal: tanggal.value,
-        dipakai: dipakai.value,
-        durasi: Number(durasi.value)
-    });
-
-    form.reset();
-});
-
-// TAMPILKAN (TANPA orderBy)
-db.collection("data").onSnapshot(snapshot => {
-    table.innerHTML = "";
-    let no = 1;
-
-    snapshot.forEach(doc => {
-        const d = doc.data();
-
-        // buat row
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${no++}</td>
-            <td>${d.tanggal}</td>
-            <td>${d.dipakai}</td>
-            <td>${d.durasi} Menit</td>
-            <td>
-                <div class="bar-container">
-                    <div class="bar" style="background-color: ${warnaDurasi(d.durasi)}">
-                        ${d.durasi} Menit
-                    </div>
-                </div>
-            </td>
-            <td>
-                <button class="btn btn-danger btn-sm" onclick="hapus('${doc.id}')">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        `;
-        table.appendChild(tr);
-
-        // Animasi bar
-        const bar = tr.querySelector(".bar");
-        setTimeout(() => {
-            bar.style.width = `${d.durasi * 100 / 60}%`;
-        }, 50); // delay sedikit supaya CSS transition jalan
-    });
-});
-
-
-// HAPUS
-function hapus(id) {
-    if (confirm("Hapus data ini?")) {
-        db.collection("data").doc(id).delete();
-    }
-}
+  }
 </script>
 
 </body>
